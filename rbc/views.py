@@ -1,4 +1,4 @@
-from django.shortcuts import render , redirect
+from django.shortcuts import render , redirect,get_object_or_404
 from django.http import HttpResponse
 
 from .models import food , Review , user_details
@@ -28,25 +28,27 @@ def home(req):
 
 def loginPage(req):
     page = 'login'
-    if(req.user.is_authenticated):
+
+    if req.user.is_authenticated:
         return redirect('home')
-    if(req.method == "POST"):
+
+    if req.method == "POST":
         username = req.POST.get('username').lower()
         password = req.POST.get('password')
-        try:
-            user = User.objects.get(username = username)
-        except:
-            messages.error(req , 'User does not exist!')
-        user1 = authenticate(req , username = username , password = password)
-        if user1 is not None:
-            login(req , user1)
-            if user1.is_superuser:
+
+        user = authenticate(req, username=username, password=password)
+
+        if user is not None:
+            login(req, user)
+            messages.success(req, "Login successful")
+            if user.is_superuser:
                 return redirect('dashboard')
-            else:
-                return redirect('home')
+            return redirect('home')
         else:
-            messages.error(req, 'Username or Password is not correct!')
-    return render(req,'login-register.html',{'page':page})
+            messages.error(req, "Invalid username or password")
+
+    return render(req, 'login-register.html', {'page': page})
+
 
 def logoutPage(req):
     logout(req)
@@ -55,27 +57,26 @@ def logoutPage(req):
 def registerPage(req):
     page = 'register'
     form = UserCreationForm()
-    if(req.method == "POST"):
+
+    if req.method == "POST":
         form = UserCreationForm(req.POST)
-        if(form.is_valid):
-            user = form.save(commit = False)
+        if form.is_valid():
+            user = form.save(commit=False)
             user.username = user.username.lower()
             user.save()
-            login(req , user)
-            cartSes(
-                user = user
-            ).save()
-            user_new = user_details.objects.create(
-                user = req.user,
-                email = "",
-                phone = 0,
-                address = ""
-            )
-            user_new.save()
+
+            login(req, user)
+
+            cartSes.objects.create(user=user)
+            user_details.objects.create(user=user)
+
+            messages.success(req, "Registration successful")
             return redirect('user_details_form')
         else:
-            messages.error(req , 'An error occured while Registration!')
-    return render(req , 'login-register.html',{'form':form,'page':page})
+            messages.error(req, "Registration failed. Please check the form.")
+
+    return render(req, 'login-register.html', {'form': form, 'page': page})
+
 
 def user_deltail_Form(req):
     user_for_det = user_details.objects.get(user = req.user)
@@ -103,8 +104,9 @@ def dashPage(req):
     
     order_count = 0
     for order in orders:
-        if order.status != "Delivered" or order.status != "Canceled":
+        if order.status not in ["Delivered", "Canceled"]:
             order_count += 1
+
 
     if q == "Menu":
         item = food.objects.all()
@@ -143,32 +145,52 @@ def menuDeletion(req , pk):
     return render(req , 'delete.html')
 
 
-def foodPage(req , pk):
-    items = food.objects.get(id = pk)
-    rev =  Review.objects.filter(food = items)
-    if(req.user.is_authenticated):
-        user1 = req.user
-    else:
-        user1 = User.objects.get(username='anonymous')
-    if(req.method == "POST"):
-        review = Review.objects.create(
-            user = user1,
-            food = items,
-            body = req.POST.get('body'),
-            rating = req.POST.get('rating')
-        )
-        return redirect('foodPage',pk=items.id)
-    
-    context={'items' : items , 'rev' : rev}
-    return render(req , 'food.html' , context)
+def foodPage(req, pk):
+    items = get_object_or_404(food, id=pk)
+    rev = Review.objects.filter(food=items)
 
+    if req.method == "POST":
+        if not req.user.is_authenticated:
+            messages.warning(req, "Please login to add a review")
+            return redirect('login')
+
+        body = req.POST.get('body')
+        rating = req.POST.get('rating')
+
+        if not body or not rating:
+            messages.error(req, "Review and rating are required")
+        else:
+            Review.objects.create(
+                user=req.user,
+                food=items,
+                body=body,
+                rating=rating
+            )
+            messages.success(req, "Review added successfully")
+            return redirect('foodPage', pk=pk)
+
+    return render(req, 'food.html', {'items': items, 'rev': rev})
+
+
+@login_required(login_url='login')
 def user_orders(req):
-    orders = order1.objects.filter(user = req.user)
-    orderItems = orderedItems.objects.filter(order__in = orders)
-    q = req.GET.get('q') if req.GET.get('q') != None else ''
-    if q != "":
-        canOrder = order1.objects.get(id = q)
-        canOrder.status = 'Canceled'
-        canOrder.save()
-    context = {'orders' : orders , 'orderItems' : orderItems}
-    return render(req , 'userOrders.html' , context)
+    orders = order1.objects.filter(user=req.user)
+    orderItems = orderedItems.objects.filter(order__in=orders)
+
+    q = req.GET.get('q')
+    if q:
+        try:
+            canOrder = order1.objects.get(id=q, user=req.user)
+            if canOrder.status == "Delivered":
+                messages.warning(req, "Delivered orders cannot be canceled")
+            else:
+                canOrder.status = 'Canceled'
+                canOrder.save()
+                messages.success(req, "Order canceled successfully")
+        except order1.DoesNotExist:
+            messages.error(req, "Invalid order")
+
+    return render(req, 'userOrders.html', {
+        'orders': orders,
+        'orderItems': orderItems
+    })

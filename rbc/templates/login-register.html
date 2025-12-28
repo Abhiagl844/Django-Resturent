@@ -5,29 +5,36 @@
 
 {% if page == 'login' %}
 
-<div>
-    <form method='POST' action=''>
+<div class="form-box">
+    <h2>Login</h2>
+
+    <form method="POST" action="">
+        {% csrf_token %}
+
     {% csrf_token %}
     <label>Username : </label>
-    <input name='username' type ='text' placeholder ='Enter Username'/>
+    <input name='username' type ='text' placeholder ="👤 Enter Username"/>
     <label>Password : </label>
-    <input name='password' type='text' placeholder='Enter Password'/>   
+    <input name="password" type="password" placeholder="🔒 Enter Password"/>
+
     <input type='submit' , value='Login'/>
     </form>
-    <p>Don't Have An Accout With Us?</p>
-    <a href="{% url 'register' %}">Register</a>
+    <p style="text-align:center;">Don't have an account?</p>
+    <a href="{% url 'register' %}" style="display:block; text-align:center;">Register</a>
 </div>
 
 {% elif page == 'register' %}
 
-<div>
-    <form method='POST' action=''>
-    {% csrf_token %}
+<div class="form-box">
+    <h2>Register</h2>
+
+    <form method="POST" action="">
+        {% csrf_token %}
     {{form.as_p}}
     <input type='submit' value='Register'/>
     </form>
-    <p>Already Signed Up?</p>
-    <a href="{% url 'login' %}">Login</a>
+     <p style="text-align:center;">Already have an account?</p>
+    <a href="{% url 'login' %}" style="display:block; text-align:center;">Login</a>
 </div>
 
 {% endif %}
