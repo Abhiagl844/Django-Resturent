@@ -1,17 +1,44 @@
 {% extends 'main.html' %}
 
 {% block content %}
-<p>This is Cart!</p>
 
-{% for item in cartItems %}
-<p>{{item.item}} {{item.quantity}} {% widthratio item.item.price 1 item.quantity %}</p>
-<br/>
-<a href="{% url 'cart_delete' %}?q={{item.id}}"><button class='but'>Delete</button></a>
-{% endfor %}
-{% if cartItems %}
-    <p>Total : {{amount}}</p>
-    <a href="{% url 'cart_update' %}"><button class='but'>Update</button></a>
-    <a href="{% url 'orderPlace' %}"><button class = 'but'> Checkout </button></a>
+<div class="cart-container">
+    <h2 class="cart-title">🛒 Your Cart</h2>
 
-{% endif %}
+    {% for item in cartItems %}
+    <div class="cart-item">
+        <div>
+            <strong>{{ item.item }}</strong><br>
+            Quantity: {{ item.quantity }}
+        </div>
+
+        <div class="cart-price">
+            ₹ {% widthratio item.item.price 1 item.quantity %}
+        </div>
+
+        <div>
+            <a href="{% url 'cart_delete' %}?q={{ item.id }}">
+                <button class="but delete-btn">Delete</button>
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+
+    {% if cartItems %}
+    <div class="cart-summary">
+        <p><strong>Total: ₹ {{ amount }}</strong></p>
+
+        <div class="cart-actions">
+            <a href="{% url 'cart_update' %}">
+                <button class="but">Update</button>
+            </a>
+
+            <a href="{% url 'orderPlace' %}">
+                <button class="but checkout-btn">Checkout</button>
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
 {% endblock %}

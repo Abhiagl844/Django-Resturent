@@ -4,19 +4,81 @@
 {% block content %}
 
 {% include 'nav.html' %}
-<h1> {{items.name}} {{items.price}} </h1>
+
+<h1>{{ items.name }} {{ items.price }}</h1>
+
+<!-- ================= Reviews Display ================= -->
 {% for r in rev %}
-    <p><small>{{r.user}} {{r.rating}} Stars</small></p>
-    <p>{{r.body}}</p>
+    <div style="margin-bottom:15px; padding:10px; background:#f8f9fa; border-radius:8px;">
+        <strong>{{ r.user }}</strong><br>
+        <span style="color:gold; font-size:18px;">
+            {% for i in "12345"|slice:":r.rating" %}
+            ★
+            {% endfor %}
+        </span>
+
+        <p style="margin-top:5px;">{{ r.body }}</p>
+    </div>
 {% endfor %}
 
-<div>
-<form method=POST  action="">
-    {%csrf_token%}
-    <input type="text" name="body">
-    <input type="text" name="rating">
-    <input type="submit" value="Submit"/>
+<!-- ================= Review Form ================= -->
+<div class="review-box">
+<form method="POST" action="">
+    {% csrf_token %}
+
+    <textarea name="body"
+        class="form-control mb-2"
+        placeholder="Write your review..."
+        required></textarea>
+
+    <div class="star-rating mb-2">
+        <input type="radio" id="star5" name="rating" value="5">
+        <label for="star5">★</label>
+
+        <input type="radio" id="star4" name="rating" value="4">
+        <label for="star4">★</label>
+
+        <input type="radio" id="star3" name="rating" value="3">
+        <label for="star3">★</label>
+
+        <input type="radio" id="star2" name="rating" value="2">
+        <label for="star2">★</label>
+
+        <input type="radio" id="star1" name="rating" value="1">
+        <label for="star1">★</label>
+    </div>
+
+    <input type="submit" class="btn btn-warning" value="Submit Review">
 </form>
 </div>
+
+<!-- ================= Styling ================= -->
+<style>
+.star-rating {
+    direction: rtl;
+    display: inline-flex;
+    font-size: 1.8rem;
+}
+.star-rating input {
+    display: none;
+}
+.star-rating label {
+    color: #ccc;
+    cursor: pointer;
+}
+.star-rating input:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: gold;
+}
+.review-box {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    width: 320px;
+    margin-top: 20px;
+}
+</style>
 
 {% endblock %}
