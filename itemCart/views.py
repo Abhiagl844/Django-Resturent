@@ -15,7 +15,12 @@ from django.db.models import Q
 
 def cartPage(req):
     page = 'cart'
-    cart = cartSes.objects.get(user = req.user)
+    # cart = cartSes.objects.get(user = req.user)
+    cart, created = cartSes.objects.get_or_create(user=req.user)
+    if created:
+        print("New cart created")
+
+
     cartItem = cartItems.objects.filter(cart = cart)
     
     amount = 0

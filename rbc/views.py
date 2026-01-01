@@ -95,7 +95,14 @@ def registerPage(req):
 
 
 def user_deltail_Form(req):
-    user_for_det = user_details.objects.get(user = req.user)
+    user_for_det, created = user_details.objects.get_or_create(
+        user=req.user,
+        defaults={
+            'email': req.user.email or '',
+            'phone': 0,
+            'address': ''
+        }
+    )
     userForm = user_detailsForm(instance = user_for_det)
 
 
