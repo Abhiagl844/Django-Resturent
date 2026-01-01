@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from cloudinary.models import CloudinaryField
+
 
 
 class user_details(models.Model):
@@ -35,7 +37,9 @@ class food(models.Model):
 
     name = models.CharField(max_length = 30 , blank=False)
     ingredients = models.JSONField()
-    image = models.ImageField(blank=True)
+    # image = models.ImageField(blank=True)
+    image = CloudinaryField('image', blank=True, null=True)
+
     price = models.IntegerField(blank=False)
     type = models.CharField(max_length=7 ,choices=type_choice , null=True , blank=True)
     course = models.CharField(max_length = 25 , choices=course_choice , null = True , blank=True)
