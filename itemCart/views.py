@@ -31,8 +31,10 @@ def cartPage(req):
     return render(req, 'cart.html' , context)
 
 @login_required(login_url='login')
+
 def cartAdd(req):
-    cart = cartSes.objects.get(user = req.user)
+    # cart = cartSes.objects.get(user = req.user)
+    cart, created = cartSes.objects.get_or_create(user=req.user)
 
     addCart = req.GET.get('q')
 
@@ -46,7 +48,9 @@ def cartAdd(req):
 def cartUpdate(req):
     page = 'cart'
     cartFormSet = modelformset_factory(cartItems , form = cartForm, extra=0)
-    cart = cartSes.objects.get(user = req.user)
+    # cart = cartSes.objects.get(user = req.user)
+    cart, created = cartSes.objects.get_or_create(user=req.user)
+
     cartItem = cartItems.objects.filter(cart = cart)
     forms = cartFormSet(queryset = cartItem)
 
@@ -70,7 +74,9 @@ def cartDelete(req):
 
 
 def orderPlace(req):
-    cart = cartSes.objects.get(user = req.user)
+    # cart = cartSes.objects.get(user = req.user)
+    cart, created = cartSes.objects.get_or_create(user=req.user)
+
     cartItem = cartItems.objects.filter(cart = cart)
     user_data = user_details.objects.get(user = req.user)
 
