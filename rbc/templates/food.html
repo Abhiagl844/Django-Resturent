@@ -55,24 +55,22 @@
 
     <div class="star-rating mb-2">
 
-    <input type="radio" id="star1" name="rating" value="1" required>
-    <label for="star1">★</label>
-
-    <input type="radio" id="star2" name="rating" value="2">
-    <label for="star2">★</label>
-
-    <input type="radio" id="star3" name="rating" value="3">
-    <label for="star3">★</label>
+    <input type="radio" id="star5" name="rating" value="5">
+    <label for="star5">★</label>
 
     <input type="radio" id="star4" name="rating" value="4">
     <label for="star4">★</label>
 
-    <input type="radio" id="star5" name="rating" value="5">
-    <label for="star5">★</label>
+    <input type="radio" id="star3" name="rating" value="3">
+    <label for="star3">★</label>
+
+    <input type="radio" id="star2" name="rating" value="2">
+    <label for="star2">★</label>
+
+    <input type="radio" id="star1" name="rating" value="1" required>
+    <label for="star1">★</label>
 
 </div>
-
-
 
 
 
@@ -82,6 +80,7 @@
 
 <!-- ================= Styling ================= -->
 <style>
+
 .star-rating {
     display: inline-flex;
     flex-direction: row-reverse;
@@ -95,14 +94,16 @@
 .star-rating label {
     color: #ccc;
     cursor: pointer;
+    transition: color 0.2s;
 }
 
-/* highlight selected stars */
+/* correct glow direction */
 .star-rating input:checked ~ label,
 .star-rating label:hover,
 .star-rating label:hover ~ label {
     color: gold;
 }
+
 
 
 .review-box {
