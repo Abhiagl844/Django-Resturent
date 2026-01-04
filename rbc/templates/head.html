@@ -1,73 +1,162 @@
 {% load static %}
 {% block content %}
 
+<style>
+/* ================= NAVBAR ONLY (SCOPED) ================= */
+.nav-wrapper {
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    padding: 10px 20px;
+}
 
-{% if page == "login" %}
-    <div class = "section1">
-{% else %}
-    <div class = "section">
-{% endif %}
+/* Top layout */
+.nav-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 
-{% if page == 'login' %}
+/* Brand */
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
-{% elif page == 'register' %}
+.nav-brand img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+}
 
-{% else %}
-<div class='ham'>
-    <button onclick="pop3()" class="but"><hr width="25px"><hr><hr></button>
-    <div class='ham-content' id='ham' style="display:none; border:1px Solid black;min-height:50px;">
-        {% if request.user.is_authenticated %}
-            <p>{{request.user}} Welcome!</p>
-            {% if page == 'cart' %}
-                <a href='{% url "home" %}'><div>Home</div></a>
+.nav-brand span {
+    font-size: 26px;
+    font-weight: 800;
+    color: #d2b48c;
+}
+
+/* Buttons (NAV ONLY) */
+.nav-btn {
+    padding: 7px 16px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    background: #1f2937;   /* dark, not blue */
+    color: #ffffff;
+}
+
+/* Hamburger */
+.nav-ham {
+    position: relative;
+}
+
+.nav-ham-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.nav-ham-btn hr {
+    border: none;
+    height: 2px;
+    width: 25px;
+    background: #1f2937;
+    margin: 4px 0;
+}
+
+/* Dropdowns */
+.nav-dropdown {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    background: #ffffff;
+    border-radius: 12px;
+    min-width: 180px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+    overflow: hidden;
+    z-index: 999;
+}
+
+.nav-dropdown div {
+    padding: 10px 14px;
+    color: #1f2937;
+}
+
+.nav-dropdown div:hover {
+    background: #f3f4f6;
+}
+
+/* Account */
+.nav-acc {
+    position: relative;
+}
+</style>
+
+<div class="nav-wrapper">
+    <div class="nav-top">
+
+        <!-- ===== LEFT (Hamburger) ===== -->
+        <div>
+        {% if page != 'login' and page != 'register' %}
+            <div class="nav-ham">
+                <button class="nav-ham-btn" onclick="pop3()">
+                    <hr><hr><hr>
+                </button>
+
+                <div id="ham" class="nav-dropdown" style="display:none;">
+                    {% if request.user.is_authenticated %}
+                        <div>{{ request.user }} Welcome!</div>
+
+                        {% if page == 'cart' %}
+                            <a href="{% url 'home' %}"><div>Home</div></a>
+                        {% else %}
+                            <a href="{% url 'cartPage' %}"><div>Cart</div></a>
+                        {% endif %}
+
+                        <a href="{% url 'user-order' %}"><div>Your Orders</div></a>
+                        <a href="{% url 'user-update' %}"><div>About You</div></a>
+                    {% else %}
+                        <a href="{% url 'login' %}"><div>About You</div></a>
+                    {% endif %}
+                    <div>Contact Us</div>
+                </div>
+            </div>
+        {% endif %}
+        </div>
+
+        <!-- ===== CENTER (Brand) ===== -->
+        <div class="nav-brand">
+            <img src="{% static 'rbc/cc-img.jpg' %}">
+            <span>Country Club</span>
+        </div>
+
+        <!-- ===== RIGHT (Account/Login) ===== -->
+        <div>
+            {% if request.user.is_authenticated %}
+                <div class="nav-acc">
+                    <button class="nav-btn" onclick="pop2()">Account</button>
+                    <div id="acc" class="nav-dropdown" style="display:none; right:0; left:auto;">
+                        <div>Hello {{ request.user }}</div>
+                        <a href="{% url 'logout' %}"><div>Logout</div></a>
+                    </div>
+                </div>
             {% else %}
-                <a href="{% url 'cartPage' %}"><div> Cart </div></a>
+                {% if page != 'login' and page != 'register' %}
+                    <a href="{% url 'login' %}">
+                        <button class="nav-btn">Login</button>
+                    </a>
+                {% endif %}
             {% endif %}
-        {% endif %}
-        {% if request.user.is_authenticated %}
-            <a href="{% url 'user-order' %}"><div>Your Orders</div></a>
-            <a href="{% url 'user-update' %}"><div>About You</div></a>
-        {% else %}
-            <a href="{% url 'login' %}"><div>About You</div></a>
-        {% endif %}
-        <div>Contact Us</div>
+        </div>
+
     </div>
 </div>
-{% endif %}
-<div>
-    <table border="0" align="center">
-    <th> <span> <img src="{% static 'rbc/cc-img.jpg' %}" width="50" height="50"> </span> </th>
-    <th><font size="10" color="#D2B48C"> <b> Country Club </b> </font></th>
-    </table>
-</div>
 
-
-{% if request.user.is_authenticated %}
-<div>
-    <div class='acc'><button class="but" onclick="pop2()"> Account </button>
-    <div id='acc' class='acc-content' style="display:none; border:1px Solid black;min-height:50px; "> <p>Hello {{request.user}} </p>
-        <p><a href="{% url 'logout' %}"> Logout </a></p>
-    </div>
-    </div>
-</div>
-{% else %}
-{% if page == 'login' %}
-
-{% elif page == 'register' %}
-
-{% else %}
-<div>
-    <a href={% url 'login' %}><button class="but"> Login </button></a> 
-</div>
-{% endif %}
-{% endif %}
-</div>
 <hr>
-
-
 
 {% endblock %}
 
 {% block script %}
-<script type="text/javascript" src="{% static 'rbc/head.js' %}"></script>
+<script src="{% static 'rbc/head.js' %}"></script>
 {% endblock %}

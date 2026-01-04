@@ -2,10 +2,86 @@
 
 {% block content %}
 
-<form method="POST" action="" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{menuForm.as_p}}
-    <input type="submit" value="Submit"/>
-</form>
+<style>
+/* ===== PAGE BACKGROUND ===== */
+body {
+    background: linear-gradient(135deg, #f8fafc, #eef2f7);
+}
+
+/* ===== CENTER WRAPPER ===== */
+.form-wrapper {
+    min-height: calc(100vh - 140px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ===== FORM CARD ===== */
+.form-card {
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    padding: 30px 35px;
+    border-radius: 22px;
+    width: 420px;
+    box-shadow: 0 18px 45px rgba(0,0,0,0.12);
+}
+
+/* ===== FORM ELEMENTS ===== */
+.form-card p {
+    margin-bottom: 14px;
+}
+
+.form-card label {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.form-card input[type="text"],
+.form-card input[type="number"],
+.form-card input[type="file"],
+.form-card textarea,
+.form-card select {
+    width: 100%;
+    padding: 8px 10px;
+    margin-top: 4px;
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+}
+
+.form-card input:focus,
+.form-card textarea:focus,
+.form-card select:focus {
+    outline: none;
+    border-color: #6366f1;
+}
+
+/* ===== SUBMIT BUTTON ===== */
+.form-card input[type="submit"] {
+    margin-top: 15px;
+    padding: 10px 22px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    background: linear-gradient(135deg, #16a34a, #15803d);
+    color: #ffffff;
+    box-shadow: 0 10px 25px rgba(22,163,74,0.35);
+}
+
+.form-card input[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 35px rgba(22,163,74,0.45);
+}
+</style>
+
+<div class="form-wrapper">
+    <div class="form-card">
+        <form method="POST" action="" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ menuForm.as_p }}
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+</div>
 
 {% endblock %}

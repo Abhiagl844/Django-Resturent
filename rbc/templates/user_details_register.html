@@ -2,10 +2,84 @@
 
 {% block content %}
 
-<form method='POST'>
-    {% csrf_token %}
-    {{ userForm.as_p }}
-    <button type='submit' class = 'but'> Save </button>
-</form>
+<style>
+/* ===== PAGE BACKGROUND ===== */
+body {
+    background: linear-gradient(135deg, #f8fafc, #eef2f7);
+}
+
+/* ===== CENTER WRAPPER ===== */
+.user-form-wrapper {
+    min-height: calc(100vh - 140px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ===== FORM CARD ===== */
+.user-form-card {
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    padding: 32px 36px;
+    border-radius: 22px;
+    width: 420px;
+    box-shadow: 0 18px 45px rgba(0,0,0,0.12);
+}
+
+/* ===== FORM ELEMENTS ===== */
+.user-form-card p {
+    margin-bottom: 14px;
+}
+
+.user-form-card label {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.user-form-card input,
+.user-form-card textarea,
+.user-form-card select {
+    width: 100%;
+    padding: 8px 10px;
+    margin-top: 4px;
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+}
+
+.user-form-card input:focus,
+.user-form-card textarea:focus,
+.user-form-card select:focus {
+    outline: none;
+    border-color: #16a34a;
+}
+
+/* ===== SUBMIT BUTTON ===== */
+.user-form-card button {
+    margin-top: 16px;
+    padding: 10px 24px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    background: linear-gradient(135deg, #16a34a, #15803d);
+    color: #ffffff;
+    box-shadow: 0 10px 25px rgba(22,163,74,0.35);
+}
+
+.user-form-card button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 35px rgba(22,163,74,0.45);
+}
+</style>
+
+<div class="user-form-wrapper">
+    <div class="user-form-card">
+        <form method="POST">
+            {% csrf_token %}
+            {{ userForm.as_p }}
+            <button type="submit" class="but">Save</button>
+        </form>
+    </div>
+</div>
 
 {% endblock %}

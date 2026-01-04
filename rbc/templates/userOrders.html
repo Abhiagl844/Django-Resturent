@@ -1,18 +1,105 @@
 {% extends 'main.html' %}
 {% block content %}
-<h3> Order History </h3>
-{% for order in orders %}
-    <hr>
-    <p>{{order}} :: {{order.status}}</p>
-    {% for item in orderItems %}
-        {% if item.order == order %}
-            <p>{{item.item}}  X  {{item.quantity}}</p>
-        {% endif %}
+
+<style>
+/* ===== PAGE BACKGROUND ===== */
+body {
+    background: linear-gradient(135deg, #f8fafc, #eef2f7);
+}
+
+/* ===== PAGE WRAPPER ===== */
+.order-wrapper {
+    width: 85%;
+    margin: 110px auto 40px auto;
+}
+
+/* ===== PAGE TITLE ===== */
+.order-wrapper h3 {
+    font-size: 26px;
+    font-weight: 800;
+    margin-bottom: 25px;
+    color: #1f2937;
+}
+
+/* ===== ORDER CARD ===== */
+.order-card {
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    padding: 22px 26px;
+    border-radius: 20px;
+    box-shadow: 0 18px 45px rgba(0,0,0,0.10);
+    margin-bottom: 24px;
+}
+
+/* ===== ORDER HEADER ===== */
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.order-title {
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.order-status {
+    font-size: 13px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: #e5e7eb;
+    color: #374151;
+}
+
+/* ===== ORDER ITEMS ===== */
+.order-items p {
+    margin: 6px 0;
+    color: #374151;
+    padding-left: 10px;
+}
+
+/* ===== ACTION BUTTON ===== */
+.order-action {
+    margin-top: 14px;
+}
+
+.order-action .but {
+    padding: 7px 18px;
+    border-radius: 999px;
+}
+</style>
+
+<div class="order-wrapper">
+    <h3>Order History</h3>
+
+    {% for order in orders %}
+        <div class="order-card">
+
+            <div class="order-header">
+                <div class="order-title">{{ order }}</div>
+                <div class="order-status">{{ order.status }}</div>
+            </div>
+
+            <div class="order-items">
+                {% for item in orderItems %}
+                    {% if item.order == order %}
+                        <p>{{ item.item }} × {{ item.quantity }}</p>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            {% if order.status != 'Canceled' %}
+                <div class="order-action">
+                    <a href="{% url 'user-order' %}?q={{order.id}}">
+                        <button class="but">Cancel Order</button>
+                    </a>
+                </div>
+            {% endif %}
+
+        </div>
     {% endfor %}
-    {% if order.status != 'Canceled'%}
-        <a href="{% url 'user-order' %}?q={{order.id}}"><button class='but'>Cancel Order</button></a>
-    {% endif %}
+</div>
 
-{% endfor %}
-
-{% endblock %} 
+{% endblock %}

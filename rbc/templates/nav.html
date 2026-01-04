@@ -1,34 +1,135 @@
 {% load static %}
-{% block content%}
+{% block content %}
 
-<table border="0" align="center">
-    <th><a href="{% url 'home'%}?q="><button onclick="menu()" class="but"> MENU </button></a></th>
-    <th>
-    <div class="dropdown" >
-    <button class="but" onclick="pop1()"> CONTACT US </button>
-    <div id="myDropdown1" class="dropdown-content" style="display:none; border:1px Solid black;min-height:50px; ">
-    <ul>
-        
-    <li><b> Phone No. : {{contact.contact}}</b></li>
-    </ul>
-    </div>
-    </div>
-    </th>
-    <th><a href="https://www.google.com/maps/dir//country+club/@23.7463206,86.754879,13z/data=!4m8!4m7!1m0!1m5!1m1!1s0x39f6dddee67d8e37:0xfa6ce1c795354925!2m2!1d86.7898987!2d23.746246"><button class="but"><font color="black"> DIRECTIONS TO OUR RESTAURANT </font></button></a></th>
-    <th>
-    <div class="dropdown" >
-    <button class="but" onclick="pop()"> ADDRESS </button>
-    <div id="myDropdown" class="dropdown-content" style="display:none; border:1px Solid black;">
-    <ul>
-    <li> Opposite Shryam Kalyan Kendra, Below Bajaj Allainz, Sirsa Pahari, Chirkunda, Dist. Dhanbad. </li>
-    <br> Pin: 828202
-    <ul>
-    </div>
-    </div>
-    </th>
-    <th><button class="but"> <a href=""><font color="black"> GALLERY </font></a></button></th>
-    </table>
+<style>
+/* ===== SAFE FOOTER CONTAINER ===== */
+.footer-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 30px 0;
+    overflow-x: hidden;   /* ✅ prevents side overlap */
+}
 
-<script type="text/javascript" src="{% static 'rbc/head.js' %}"></script>
+/* ===== FOOTER BAR ===== */
+.footer-bar {
+    max-width: 1200px;     /* ✅ prevents stretching */
+    width: calc(100% - 40px);
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 18px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.10);
+    padding: 18px;
+}
+
+/* ===== FOOTER GRID ===== */
+.footer-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+}
+
+/* ===== BUTTONS (SCOPED) ===== */
+.footer-btn {
+    padding: 8px 18px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    background: #1f2937;   /* dark, not blue */
+    color: #ffffff;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* ===== DROPDOWNS ===== */
+.footer-dropdown {
+    position: relative;
+}
+
+.footer-dropdown-content {
+    position: absolute;
+    top: 45px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+    padding: 12px 14px;
+    min-width: 220px;
+    z-index: 999;
+}
+
+.footer-dropdown-content ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.footer-dropdown-content li {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.footer-address {
+    font-size: 14px;
+    color: #374151;
+    line-height: 1.4;
+    text-align: center;
+}
+
+/* ===== FOOTER LINK RESET ONLY ===== */
+.footer-bar a {
+    text-decoration: none;
+    color: inherit;
+}
+</style>
+
+<div class="footer-wrapper">
+    <div class="footer-bar">
+        <div class="footer-grid">
+
+            <!-- MENU -->
+            <a href="{% url 'home' %}?q=">
+                <button onclick="menu()" class="footer-btn">MENU</button>
+            </a>
+
+            <!-- CONTACT -->
+            <div class="footer-dropdown">
+                <button class="footer-btn" onclick="pop1()">CONTACT US</button>
+                <div id="myDropdown1" class="footer-dropdown-content" style="display:none;">
+                    <ul>
+                        <li>Phone No. : {{ contact.contact }}</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- DIRECTIONS -->
+            <a href="https://www.google.com/maps/dir//country+club/@23.7463206,86.754879,13z/data=!4m8!4m7!1m0!1m5!1m1!1s0x39f6dddee67d8e37:0xfa6ce1c795354925!2m2!1d86.7898987!2d23.746246">
+                <button class="footer-btn">DIRECTIONS TO OUR RESTAURANT</button>
+            </a>
+
+            <!-- ADDRESS -->
+            <div class="footer-dropdown">
+                <button class="footer-btn" onclick="pop()">ADDRESS</button>
+                <div id="myDropdown" class="footer-dropdown-content" style="display:none;">
+                    <div class="footer-address">
+                        Opposite Shryam Kalyan Kendra,<br>
+                        Below Bajaj Allainz,<br>
+                        Sirsa Pahari, Chirkunda,<br>
+                        Dist. Dhanbad<br>
+                        <b>Pin: 828202</b>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GALLERY -->
+            <button class="footer-btn">GALLERY</button>
+
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'rbc/head.js' %}"></script>
 
 {% endblock %}
